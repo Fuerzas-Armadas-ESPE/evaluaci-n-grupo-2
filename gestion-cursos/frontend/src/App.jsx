@@ -1,17 +1,20 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate  } from 'react-router-dom';
 import React from 'react';
-import NavBar from './components/NavBar';
 import CursoList from './components/CursoList';
 import CursoForm from './components/CursoForm';
-
+import TemaList from './components/TemaList';
+import TemaForm from './components/TemaForm';
 function App() {
   return (
     <Router>
-      <NavBar />
       <Routes>
+       <Route path="/" element={<Navigate to="/cursos" />} />
         <Route path="/cursos" element={<CursoList />} />
         <Route path="/cursos/new" element={<CursoForm />} />
-        {/* Rutas adicionales para editar o ver detalles de cursos */}
+        <Route path="/cursos/:id/edit" element={<CursoForm />} />
+        <Route path="/temas" element={<TemaList />} />
+        <Route path="/temas/new" element={<TemaForm />} />
+        <Route path="/temas/:id/edit" element={<TemaForm />} />
       </Routes>
     </Router>
   );
