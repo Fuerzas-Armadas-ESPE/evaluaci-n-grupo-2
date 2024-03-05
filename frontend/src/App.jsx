@@ -1,5 +1,9 @@
-import { BrowserRouter as Router, Routes, Route, Navigate  } from 'react-router-dom';
-import React from 'react';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from 'react-router-dom';
 import CursoList from './components/CursoList';
 import CursoForm from './components/CursoForm';
 import TemaList from './components/TemaList';
@@ -8,7 +12,7 @@ function App() {
   return (
     <Router>
       <Routes>
-       <Route path="/" element={<Navigate to="/cursos" />} />
+        <Route path="/" element={<Navigate to="/cursos" />} />
         <Route path="/cursos" element={<CursoList />} />
         <Route path="/cursos/new" element={<CursoForm />} />
         <Route path="/cursos/:id/edit" element={<CursoForm />} />
