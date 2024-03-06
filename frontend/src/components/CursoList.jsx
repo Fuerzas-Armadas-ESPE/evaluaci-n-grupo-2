@@ -5,6 +5,7 @@ import Navbar from './NavBar.jsx';
 
 function CursoList() {
   const [cursos, setCursos] = useState([]);
+
   const navigate = useNavigate();
 
   const loadCursos = async () => {
@@ -25,7 +26,7 @@ function CursoList() {
               throw new Error(`Failed to fetch tema with ID ${temaId}`);
             }
             const temaData = await temaResponse.json();
-            return temaData.titulo; // Devolver solo el título del tema
+            return { ...temaData, cursoId: curso._id }; // Devolver tema con cursoId
           });
           const temas = await Promise.all(temasPromises);
           return { ...curso, temas }; // Agregar los detalles completos de los temas al curso
@@ -34,6 +35,36 @@ function CursoList() {
       setCursos(cursosConTemas);
     } catch (error) {
       console.error('Error fetching cursos:', error);
+    }
+  };
+
+  const handleRevisado = async (temaId, cursoId, revisado) => {
+    try {
+      // Cambiar estado localmente
+      const updatedCursos = cursos.map((curso) => {
+        if (curso._id === cursoId) {
+          const updatedTemas = curso.temas.map((tema) => {
+            if (tema._id === temaId) {
+              return { ...tema, revisado: !tema.revisado }; // Cambiado aquí
+            }
+            return tema;
+          });
+          return { ...curso, temas: updatedTemas };
+        }
+        return curso;
+      });
+      setCursos(updatedCursos);
+
+      // Actualizar estado en la base de datos
+      await fetch(`http://localhost:3000/temas/${temaId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ revisado: !revisado }),
+      });
+    } catch (error) {
+      console.error('Error updating tema:', error);
     }
   };
 
@@ -97,7 +128,27 @@ function CursoList() {
                 <Typography variant="body1">Temas:</Typography>
                 <ul>
                   {curso.temas.map((tema, index) => (
-                    <li key={index}>{tema}</li>
+                    <div
+                      key={index}
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        marginBottom: '0.5rem',
+                      }}
+                    >
+                      <li>{tema.titulo}</li>
+                      <div style={{ textAlign: 'right' }}>
+                        <Button
+                          variant="contained"
+                          color={tema.revisado ? 'secondary' : 'primary'}
+                          style={{ marginLeft: '5rem' }}
+                          onClick={() => handleRevisado(tema._id, tema.cursoId)}
+                        >
+                          {tema.revisado ? 'NO REVISADO' : 'REVISADO'}
+                        </Button>
+                      </div>
+                    </div>
                   ))}
                 </ul>
                 <Typography variant="body2">
