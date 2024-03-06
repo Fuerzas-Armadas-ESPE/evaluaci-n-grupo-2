@@ -45,7 +45,7 @@ function CursoList() {
         if (curso._id === cursoId) {
           const updatedTemas = curso.temas.map((tema) => {
             if (tema._id === temaId) {
-              return { ...tema, revisado: !revisado };
+              return { ...tema, revisado: !tema.revisado }; // Cambiado aquí
             }
             return tema;
           });
@@ -54,7 +54,7 @@ function CursoList() {
         return curso;
       });
       setCursos(updatedCursos);
-
+  
       // Actualizar estado en la base de datos
       await fetch(`http://localhost:3000/temas/${temaId}`, {
         method: 'PUT',
@@ -66,7 +66,8 @@ function CursoList() {
     } catch (error) {
       console.error('Error updating tema:', error);
     }
-  };
+  };  
+
 
   const handleDelete = async (id) => {
     try {
