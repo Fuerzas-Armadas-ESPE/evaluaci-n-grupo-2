@@ -65,6 +65,10 @@ export default function CursoForm() {
     }
   };
 
+  const handleCancel = () => {
+    navigate('/cursos');
+  };
+
   useEffect(() => {
     if (params.id) {
       loadCurso(params.id);
@@ -121,6 +125,13 @@ export default function CursoForm() {
                 ) : (
                   'Guardar'
                 )}
+              </Button>
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={handleCancel}
+              >
+                Cancelar
               </Button>
             </form>
           </CardContent>
