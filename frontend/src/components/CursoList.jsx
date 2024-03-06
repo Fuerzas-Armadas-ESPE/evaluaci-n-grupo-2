@@ -40,12 +40,13 @@ function CursoList() {
 
   const handleRevisado = async (temaId, cursoId, revisado) => {
     try {
+      const updatedRevisado = !revisado; // Cambiar el estado revisado
       // Cambiar estado localmente
       const updatedCursos = cursos.map((curso) => {
         if (curso._id === cursoId) {
           const updatedTemas = curso.temas.map((tema) => {
             if (tema._id === temaId) {
-              return { ...tema, revisado: !tema.revisado }; // Cambiado aquí
+              return { ...tema, revisado: updatedRevisado }; // Usar el nuevo valor de revisado
             }
             return tema;
           });
@@ -61,7 +62,7 @@ function CursoList() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ revisado: !revisado }),
+        body: JSON.stringify({ revisado: updatedRevisado }), // Usar el nuevo valor de revisado
       });
     } catch (error) {
       console.error('Error updating tema:', error);
@@ -143,7 +144,13 @@ function CursoList() {
                           variant="contained"
                           color={tema.revisado ? 'secondary' : 'primary'}
                           style={{ marginLeft: '5rem' }}
-                          onClick={() => handleRevisado(tema._id, tema.cursoId)}
+                          onClick={() =>
+                            handleRevisado(
+                              tema._id,
+                              tema.cursoId,
+                              tema.revisado
+                            )
+                          }
                         >
                           {tema.revisado ? 'NO REVISADO' : 'REVISADO'}
                         </Button>
